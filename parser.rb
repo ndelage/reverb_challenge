@@ -4,26 +4,22 @@ require 'date'
 module FileParser
 
 	def self.parse(file_location, separator)
-		file   = open_file(file_location)
-		data   = parse_data(file, separator)
-		list   = map_data_to_list(data)
-		people =  clean_list_data(list)
+		file   = File.open(file_location)
+		raw_data   = extract_data(file, separator)
+		list   = create_list_of_people(raw_data)
+		people =  conform_list_data(list)
 	end
 
 	private
 
-	def self.open_file(file_location)
-		file = File.open(file_location)
-	end
-
-	def self.parse_data(file, separator)
+	def self.extract_data(file, separator)
 		parsed_file = file.map do |row| 
 			row.gsub(/\n/, '').split("#{separator}")
 		end
 		parsed_file
 	end
 
-	def self.map_data_to_list(data)
+	def self.create_list_of_people(data)
 		header = data.shift
 		people = data.map do |person|
 			Person.new(Hash[header.zip(person)])
@@ -31,7 +27,7 @@ module FileParser
 		people
 	end
 
-	def self.clean_list_data(list)
+	def self.conform_list_data(list)
 		list.each do |person|
 			person.date_of_birth = conform_date_format(person.date_of_birth)
 			person.gender = conform_gender_format(person.gender)
