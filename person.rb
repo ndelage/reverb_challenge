@@ -25,12 +25,15 @@ class Records
 		data.flatten
 	end
 
-	# def map_to_variable_names(list)
-	# 	list.map do |person|
-	# 		person.first_name + person.last_name + person.date_of_birth + person.gender + person.favorite_color
-	# 	end
-	# end
+	module ManipulateData
+	
+		def self.map_to_variable_names(list)
+			list.map do |person|
+				person.first_name + person.last_name + person.date_of_birth + person.gender + person.favorite_color
+			end
+		end
 
-	# def sort(variable)
-	# end
+		def sort(variable)
+		end
+	end
 end

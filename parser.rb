@@ -43,7 +43,7 @@ module FileParser
 		if string.match(/\//)
 			Date.strptime(string, "%m/%d/%Y")
 		elsif string.match(/-/)
-			Date.parse(string)
+			Date.strptime(string, "%m-%d-%Y")
 		end
 	end
 
