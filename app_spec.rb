@@ -28,7 +28,7 @@ describe FileParser do
       expect(parsed_file.first).to be_an(Person)
     end
 
-    it 'returns an array of people objects have accessible attributes' do
+    it 'returns an array of people objects with accessible attributes' do
       expect(parsed_file.first.first_name).to eq('Steve')
     end
 
