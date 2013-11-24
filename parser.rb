@@ -10,6 +10,14 @@ module FileParser
 		people =  conform_list_data(list)
 	end
 
+	def self.save_to_file(file_location, person)
+		info = [person.last_name.capitalize, person.first_name.capitalize, person.gender.capitalize, person.favorite_color.capitalize, person.date_of_birth.strftime('%m/%d/%Y').to_s]
+		file = File.open(file_location, 'a') do |newline|
+			newline.puts
+			newline.write(info.join(', '))
+		end
+	end
+
 	private
 
 	def self.extract_data(file, separator)
@@ -50,4 +58,5 @@ module FileParser
 			"Female"
 		end
 	end
+
 end

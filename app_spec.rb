@@ -43,4 +43,18 @@ describe FileParser do
       expect(parsed_file.first.gender).to eq(('Male' || 'Female'))
     end
   end
+
+  describe '#save_to_file' do
+    let(:file) { File.open('data_files/test.txt') }
+    let(:person) { Person.new("FirstName" => "Test",
+                              "LastName" => "McTester",
+                              "Gender" => "Female",
+                              "DateOfBirth" => Date.parse("2011-07-14"),
+                              "FavoriteColor" => "Blue") }
+    
+    it 'saves to the test file in csv format' do
+      FileParser.save_to_file(file, person)
+      file.read.should include(("McTester" && "Test" && "Male" && "Blue" && "07/14/2011"))
+    end
+  end
 end
