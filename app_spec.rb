@@ -1,5 +1,8 @@
 require 'rspec'
 require 'pry'
+require 'simplecov'
+SimpleCov.start
+
 require_relative 'person.rb'
 require_relative 'parser.rb'
 
