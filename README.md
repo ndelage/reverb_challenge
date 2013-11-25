@@ -1,0 +1,22 @@
+Reverb Technical Challenge with Grape
+==========================================================
+
+To set up:
+```
+$bundle
+$rackup -p <desired port>
+```
+
+The app responds to the following routes:
+```
+GET /records/all
+GET /records/gender
+GET /records/birthdate
+GET /records/name
+POST /records(.json)
+```
+
+You can create a person record which saves to 'data_files/csv.txt' by running a curl command like so:
+```
+curl -d '{"first_name": "daBrandon", "last_name": "jacobs", "gender": "female", "favorite_color": "green", "date_of_birth": "1985-05-20"}' 'http://localhost:3000/records' -H Content-Type:application/json -v
+```
