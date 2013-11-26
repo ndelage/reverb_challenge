@@ -23,14 +23,17 @@ describe Person do
 end
 
 describe Records do
+  let(:records) { Records.new('data_files/psv.txt', 'data_files/csv.txt', 'data_files/ssv.txt') }
 
-  describe '#get_data' do
-    it 'returns an array' do
-      expect(Records.get_data).to be_an(Array)
-    end    
+  describe 'Records.new' do
+    it 'initializes with file names and returns a Records object' do
+      expect(records).to be_an(Records)
+    end
 
-    it 'retrieves the relevant data from the data files' do
-      # expect(Records.get_data).to be_an(Array)
+  describe '#order_by'
+    it 'sorts records objects' do
+      expect(records.order_by("favorite_color").first.favorite_color).to eq("Black")
+      expect(records.order_by("favorite_color").last.favorite_color).to eq("Yellow")  
     end
   end
 end
@@ -76,6 +79,8 @@ describe FileParser do
   end
 end
 
+
+
 describe PersonParser::AppAPI do
   include Rack::Test::Methods
 
@@ -89,7 +94,7 @@ describe PersonParser::AppAPI do
       it "returns rendered records" do
         get "/records/all"
         last_response.status.should == 200
-        JSON.parse(last_response.body).should include("1" => ["Smith", "Steve", "Male", "03/03/1985", "Red"])
+        JSON.parse(last_response.body).should include("11" => ["Smith", "Steve", "Male", "03/03/1985", "Red"])
       end
     end
   end

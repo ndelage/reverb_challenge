@@ -1,3 +1,4 @@
+require 'pry'
 require 'date'
 require 'csv'
 require_relative 'person.rb'
@@ -23,33 +24,34 @@ module FileParser
 	end
 
 	def self.find_separator(file)
-		if file.read.match(/\|/)
+		file_content = file.read
+		if file_content.include?("|")
 			" | "
-		elsif file.read.match(/,/)
+		elsif file_content.include?(",")
 			", "
 		else
 			" "
 		end	
 	end
 
-	def self.conform_data_set(data_from_file)
-    	data_from_file[:dateofbirth] = conform_date_format(data_from_file[:dateofbirth])
-    	data_from_file[:gender] = conform_gender_format(data_from_file[:gender])
-    	data_from_file		
+	def self.conform_data_set(data)
+    	data[:dateofbirth] = conform_date_format(data[:dateofbirth])
+    	data[:gender] = conform_gender_format(data[:gender])
+    	data		
 	end
 
-	def self.conform_date_format(string)
-		if string.match(/\//)
-			Date.strptime(string, "%m/%d/%Y")
-		elsif string.match(/-/)
-			Date.strptime(string, "%m-%d-%Y")
+	def self.conform_date_format(date_string)
+		if date_string.match(/\//)
+			Date.strptime(date_string, "%m/%d/%Y")
+		elsif date_string.match(/-/)
+			Date.strptime(date_string, "%m-%d-%Y")
 		end
 	end
 
-	def self.conform_gender_format(string)
-		if string.match(/^(m|M)/)
+	def self.conform_gender_format(gender_string)
+		if gender_string.match(/^(m|M)/)
 			"Male"
-		elsif string.match(/^(f|F)/)
+		elsif gender_string.match(/^(f|F)/)
 			"Female"
 		end
 	end

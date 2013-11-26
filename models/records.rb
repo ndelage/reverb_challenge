@@ -1,9 +1,11 @@
-require 'pry'
 require 'date'
+require 'pry'
 require_relative 'parser.rb'
+require_relative 'display.rb'
 
 class Records
 	include FileParser
+	include Display
 
 	def initialize(*args)
 		@data = get_data(*args)
@@ -17,31 +19,9 @@ class Records
 		file_data.flatten
 	end
 
-	def map_list_to_attributes
-		map do |person|
-			properties_for_person(person)
-		end
-	end
-
-	def properties_for_person(person)
-	  [person.last_name, person.first_name, person.gender, person.date_of_birth.strftime('%m/%d/%Y').to_s, person.favorite_color]
-	end
-
-	def convert_records_to_display(records)
-		counter = 1
-		object = {}
-		records.each do |person|
-			object[counter] = Records.properties_for_person(person)
-			counter += 1
-		end
-		return object
-	end
-
 	def order_by(*args)
-		self.sort_by do |person| 
-			args.each do |field| 
-				person.send(field.to_sym)
-			end
+		@data.sort_by do |person| 
+			args.map { |arg| person.send(arg) }
 		end
 	end
 end
