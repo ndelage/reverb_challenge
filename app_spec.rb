@@ -1,27 +1,44 @@
 require 'rspec'
 require 'pry'
 require 'simplecov'
+require 'rack/test'
 SimpleCov.start
 
-require_relative 'person.rb'
-require_relative 'parser.rb'
+require_relative 'models/person.rb'
+require_relative 'models/parser.rb'
+require_relative 'models/records.rb'
+require_relative 'driver.rb'
+require_relative 'app_api.rb'
 
 describe Person do
 
   it 'has accessible attributes' do
-  	person = Person.new({"FirstName" => 'Dain', 
-                         "LastName" =>  'Hall',
-                         "Gender" =>  'M',
-                         "FavoriteColor" =>  'Blue', 
-                         "DateOfBirth" =>  '2000-07-14'})
+  	person = Person.new({firstname:'Dain', 
+                         lastname: 'Hall',
+                         gender: 'M',
+                         dateofbirth: 'Blue', 
+                         favoritecolor: '2000-07-14'})
   	expect(person.first_name).to eq('Dain')
+  end
+end
+
+describe Records do
+
+  describe '#get_data' do
+    it 'returns an array' do
+      expect(Records.get_data).to be_an(Array)
+    end    
+
+    it 'retrieves the relevant data from the data files' do
+      # expect(Records.get_data).to be_an(Array)
+    end
   end
 end
 
 describe FileParser do
 
   describe "#parse" do
-    let(:parsed_file) { FileParser.parse('data_files/psv.txt',' | ') }
+    let(:parsed_file) { FileParser.parse('data_files/psv.txt') }
 
     it 'returns an array' do
       expect(parsed_file).to be_an(Array)
@@ -46,11 +63,11 @@ describe FileParser do
 
   describe '#save_to_file' do
     let(:file) { File.open('data_files/test.txt') }
-    let(:person) { Person.new("FirstName" => "Test",
-                              "LastName" => "McTester",
-                              "Gender" => "Female",
-                              "DateOfBirth" => Date.parse("2011-07-14"),
-                              "FavoriteColor" => "Blue") }
+    let(:person) { Person.new(firstname: "Test",
+                              lastname: "McTester",
+                              gender: "Female",
+                              dateofbirth: Date.parse("2011-07-14"),
+                              favoritecolor: "Blue") }
     
     it 'saves to the test file in csv format' do
       FileParser.save_to_file(file, person)
@@ -58,3 +75,24 @@ describe FileParser do
     end
   end
 end
+
+describe PersonParser::AppAPI do
+  include Rack::Test::Methods
+
+  def app
+    PersonParser::AppAPI
+  end
+
+  describe PersonParser::AppAPI do
+    
+    describe "GET /records/all" do
+      it "returns rendered records" do
+        get "/records/all"
+        last_response.status.should == 200
+        JSON.parse(last_response.body).should include("1" => ["Smith", "Steve", "Male", "03/03/1985", "Red"])
+      end
+    end
+  end
+end
+
+

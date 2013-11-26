@@ -1,9 +1,10 @@
 require 'grape'
 require 'json'
+require_relative 'models/records.rb'
 require_relative 'driver.rb'
 
 # run 'rackup' from terminal - default port is 9292. Can set port with 'rackup -p <port_num>'
-module Test
+module PersonParser
   class AppAPI < Grape::API
 
     version 'v1', using: :header, vendor: 'dain'
@@ -19,52 +20,28 @@ module Test
     	desc 'list all records'
 	  		get '/all' do
 	  			records = Records.get_data
-	  			counter = 1
-	  			object = {}
-	  			records.each do |person|
-	  				object[counter] = map_person_to_variable_names(person)
-	  				counter += 1
-	  			end
-					return object
+	  			Records.convert_records_to_display(records)
   			end
 
 			desc 'list records sorted by gender & last name'
 	  		get '/gender' do
 	  			records = Records.get_data
-	  			counter = 1
-	  			object = {}
 	  			sorted_records = records.sort_by { |person| [person.gender, person.last_name] }
-	  			sorted_records.each do |person|
-	  				object[counter] = map_person_to_variable_names(person)
-	  				counter += 1
-	  			end
-					return object
+	  			Records.convert_records_to_display(sorted_records)
   			end
 
   		desc 'list records sorted by birthdate'
 	  		get '/birthdate' do
 	  			records = Records.get_data
-	  			counter = 1
-	  			object = {}
 	  			sorted_records = records.sort_by { |person| person.date_of_birth }
-	  			sorted_records.each do |person|
-	  				object[counter] = map_person_to_variable_names(person)
-	  				counter += 1
-	  			end
-					return object
+	  			Records.convert_records_to_display(sorted_records)
   			end
 
   		desc 'list records sorted by last name'
 	  		get '/name' do
 	  			records = Records.get_data
-	  			counter = 1
-	  			object = {}/
 	  			sorted_records = records.sort_by { |person| person.last_name }.reverse
-	  			sorted_records.each do |person|
-	  				object[counter] = map_person_to_variable_names(person)
-	  				counter += 1
-	  			end
-					return object
+	  			Records.convert_records_to_display(sorted_records)
   			end
 
   			desc 'create a person'
@@ -77,11 +54,11 @@ module Test
   			end
   			post do
   				file = File.open('data_files/csv.txt') 
-  				person = Person.new({"FirstName" => params[:first_name],
-  														"LastName" => params[:last_name],
-  														"Gender" => params[:gender],
-  														"DateOfBirth" => params[:date_of_birth],
-  														"FavoriteColor" => params[:favorite_color]})
+  				person = Person.new({firstname: params[:first_name],
+									lastname: params[:last_name],
+									gender: params[:gender],
+									dateofbirth: params[:date_of_birth],
+									favoritecolor: params[:favorite_color]})
   				FileParser.save_to_file(file, person)	
   			end
   	end
