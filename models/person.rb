@@ -11,6 +11,7 @@ class Person
 		@favorite_color = params.fetch(:favoritecolor)
 	end
 
+  # _for_person is assumed, given this is a method on the Person class
 	def properties_for_person
 	  [self.last_name, self.first_name, self.gender, self.date_of_birth.strftime('%m/%d/%Y').to_s, self.favorite_color]
 	end

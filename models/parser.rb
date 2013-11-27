@@ -16,14 +16,17 @@ module FileParser
 	end
 
 	def self.save_to_file(file_location, person)
+    # where's the best place to format (e.g. capitalize)?
 		info = [person.last_name.capitalize, person.first_name.capitalize, person.gender.capitalize, person.favorite_color.capitalize, person.date_of_birth.strftime('%m/%d/%Y').to_s]
 		file = File.open(file_location, 'a') do |newline|
+      # what's this empty puts for?
 			newline.puts
 			newline.write(info.join(', '))
 		end
 	end
 
 	def self.find_separator(file)
+    # do you know what .read does?
 		file_content = file.read
 		if file_content.include?("|")
 			" | "

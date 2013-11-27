@@ -52,6 +52,7 @@ module PersonParser
   				requires :favorite_color, type: String, desc: "Favorite Color"
   			end
   			post do
+          # your controller isn't the right place to open and write to a file
   				file = File.open('data_files/csv.txt') 
   				person = Person.new({firstname: params[:first_name],
               									lastname: params[:last_name],
